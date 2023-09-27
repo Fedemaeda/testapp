@@ -21,14 +21,7 @@ async function etiquetarAmigos(url, cantidad, pausa) {
   const api = new Api(instabot, followers, cantidad);
 
   // Iniciar la API
-  try {
-    await api.start(pausa);
-    // Inicio de sesión exitoso
-    alert("Inicio de sesión exitoso");
-  } catch (error) {
-    // Error de inicio de sesión
-    alert(error);
-  }
+  await api.start(pausa);
 }
 
 // Ejemplo de uso
@@ -36,43 +29,30 @@ const url = "https://www.instagram.com/p/123456789/";
 const cantidad = document.getElementById("cantidad").value;
 const pausa = 3600000;
 
-etiquetarAmigos(url, cantidad, pausa);
+// Botón de inicio de sesión
+const button = document.getElementById("iniciarSesion");
+button.addEventListener("click", async () => {
+  // Iniciar sesión en Instagram
+  const instabot = new Instabot({
+    clientId,
+    clientSecret,
+    username,
+    password,
+  });
 
-// API
-class Api {
-  constructor(instabot, followers, quantity) {
-    this.instabot = instabot;
-    this.followers = followers;
-    this.quantity = quantity;
-    this.totalComments = 0;
+  try {
+    await instabot.login();
+    // Inicio de sesión exitoso
+    alert("Inicio de sesión exitoso");
+  } catch (error) {
+    // Error de inicio de sesión
+    alert(error);
   }
+});
 
-  async start() {
-    let index = 0;
-    while (index < this.followers.length) {
-      for (let i = 0; i < this.quantity; i++) {
-        if (index < this.followers.length) {
-          await this.comment(index);
-          index++;
-          this.totalComments++;
-        }
-      }
-
-      if (this.totalComments % 100 === 0) {
-        console.log("Haciendo una pausa de 1 hora...");
-        await sleep(3600000);
-      }
-    }
-  }
-
-  async comment(index) {
-    const friend = this.followers[index];
-    const comment = "@" + friend.username;
-
-    if (index < this.quantity - 1) {
-      comment += ", ";
-    }
-
-    await this.instabot.comment(this.url, comment);
-  }
-}
+// Botón de etiquetar amigos
+const button2 = document.getElementById("etiquetarAmigos");
+button2.addEventListener("click", async () => {
+  // Iniciar la API
+  await etiquetarAmigos(url, cantidad, pausa);
+});
