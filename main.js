@@ -26,7 +26,7 @@ async function etiquetarAmigos(url, cantidad, pausa) {
 
 // Ejemplo de uso
 const url = "https://www.instagram.com/p/123456789/";
-const cantidad = document.getElementById("cantidad").value;
+const cantidad = 2;
 const pausa = 3600000;
 
 // Botón de inicio de sesión
@@ -56,3 +56,48 @@ button2.addEventListener("click", async () => {
   // Iniciar la API
   await etiquetarAmigos(url, cantidad, pausa);
 });
+
+// API
+class Api {
+  constructor(instabot, followers, quantity) {
+    this.instabot = instabot;
+    this.followers = followers;
+    this.quantity = quantity;
+    this.totalComments = 0;
+    this.index = 0;
+  }
+
+  async start() {
+    while (this.totalComments < this.followers.length) {
+      // Si el índice es par, etiquetar amigos en una publicación mía
+      if (this.index % 2 === 0) {
+        const friend1 = this.followers[this.index];
+        const friend2 = this.followers[this.index + 1];
+
+        const comment = "@" + friend1.username + ", @" + friend2.username;
+
+        await this.instabot.postComment(this.url, comment);
+        this.index += 2;
+        this.totalComments++;
+      } else {
+        // Si el índice es impar, etiquetar amigos en una publicación de otro
+        const friend = this.followers[this.index];
+
+        const comment = "@" + friend.username;
+
+        await this.instabot.comment(friend.username, comment);
+        this.index++;
+        this.totalComments++;
+      }
+
+      if (this.totalComments % 100 === 0) {
+        console.log("Haciendo una pausa de 1 hora...");
+        await sleep(3600000);
+      }
+    }
+  }
+
+  async comment(index) {
+    // ...
+  }
+}
