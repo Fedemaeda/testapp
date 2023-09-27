@@ -5,7 +5,11 @@
 </head>
 <body>
   <script src="main.js"></script>
-
+  <script>
+    document.querySelector("#iniciarSesion").addEventListener("click", () => {
+      alert("Inicio de sesión exitoso");
+    });
+  </script>
   <input type="text" id="url" placeholder="URL del post">
   <input type="number" id="cantidad" placeholder="Cantidad de amigos a etiquetar por comentario">
 
